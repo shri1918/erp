@@ -1,24 +1,8 @@
 import React, { useState } from 'react';
-import { Typography, Grid, Paper, Box, MenuItem, Select } from '@mui/material';
+import { Typography, Grid, Paper, Box, MenuItem, Select, TextField } from '@mui/material';
 import InvoiceTable from './InvoiceTable';
 import { invoiceData } from '../data/invoiceData';
-import {
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Legend,
-  BarChart,
-  Bar,
-  AreaChart,
-  Area,
-  PieChart,
-  Pie,
-  Cell
-} from 'recharts';
+import Chart from 'react-apexcharts';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d84a5b'];
 
@@ -64,8 +48,10 @@ const Invoices = () => {
     'Number', 'Client', 'Date', 'Expired Date', 'Total', 'Paid', 'Status', 'Payment'
   ];
 
-  const [timeFilter, setTimeFilter] = useState('day'); // Set default filter to 'day'
-  const [chartType, setChartType] = useState('line'); // Set default chart type to 'line'
+  const [timeFilter, setTimeFilter] = useState('day'); // Default filter to 'day'
+  const [chartType, setChartType] = useState('line'); // Default chart type to 'line'
+  const [searchQuery, setSearchQuery] = useState(''); // State for client search
+  const [statusFilter, setStatusFilter] = useState('all'); // State for status filter
 
   // Function to handle filter change
   const handleFilterChange = (event) => {
@@ -77,8 +63,40 @@ const Invoices = () => {
     setChartType(event.target.value);
   };
 
+  // Function to handle client search change
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Function to handle status filter change
+  const handleStatusChange = (event) => {
+    setStatusFilter(event.target.value);
+  };
+
+  // Function to apply client search and status filter
+  const getFilteredInvoices = () => {
+    return invoiceData.filter(invoice => {
+      const matchesClient = invoice.client.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || invoice.status.toLowerCase() === statusFilter.toLowerCase();
+      return matchesClient && matchesStatus;
+    });
+  };
+
   // Process invoice data for the selected chart type
-  const filteredData = getGroupedData(invoiceData, timeFilter);
+  const filteredData = getGroupedData(getFilteredInvoices(), timeFilter);
+  const categories = filteredData.map(data => data.period);
+  const seriesData = filteredData.map(data => data.total);
+
+  // Chart options
+  const chartOptions = {
+    chart: {
+      id: 'invoice-chart',
+    },
+    xaxis: {
+      categories: categories,
+    },
+    colors: COLORS,
+  };
 
   return (
     <div>
@@ -89,12 +107,14 @@ const Invoices = () => {
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
+              padding: 20,
             }}
           >
-            <Typography variant="h6" style={{ padding: 10 }}>
-              Invoices
-            </Typography>
-            <InvoiceTable headers={headers} data={invoiceData} />
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+              <Typography variant="h6">Invoices</Typography>
+             
+            </Box>
+            <InvoiceTable headers={headers} data={getFilteredInvoices()} />
           </Paper>
         </Grid>
       </Grid>
@@ -113,7 +133,6 @@ const Invoices = () => {
             </Typography>
 
             <Box display="flex" justifyContent="space-between" mb={2}>
-              {/* Dropdown filter for day, week, month, year */}
               <Select value={timeFilter} onChange={handleFilterChange}>
                 <MenuItem value="day">Day</MenuItem>
                 <MenuItem value="week">Week</MenuItem>
@@ -121,7 +140,6 @@ const Invoices = () => {
                 <MenuItem value="year">Year</MenuItem>
               </Select>
 
-              {/* Dropdown to select chart type */}
               <Select value={chartType} onChange={handleChartTypeChange}>
                 <MenuItem value="line">Line Chart</MenuItem>
                 <MenuItem value="bar">Bar Chart</MenuItem>
@@ -130,57 +148,43 @@ const Invoices = () => {
               </Select>
             </Box>
 
-            <ResponsiveContainer width="100%" height={400}>
+            <div>
               {chartType === 'line' && (
-                <LineChart data={filteredData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="period" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="total" stroke="#8884d8" activeDot={{ r: 8 }} />
-                </LineChart>
+                <Chart
+                  options={chartOptions}
+                  series={[{ name: 'Total', data: seriesData }]}
+                  type="line"
+                  height={400}
+                />
               )}
               {chartType === 'bar' && (
-                <BarChart data={filteredData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="period" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="total" fill="#82ca9d" />
-                </BarChart>
+                <Chart
+                  options={chartOptions}
+                  series={[{ name: 'Total', data: seriesData }]}
+                  type="bar"
+                  height={400}
+                />
               )}
               {chartType === 'area' && (
-                <AreaChart data={filteredData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="period" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Area type="monotone" dataKey="total" stroke="#8884d8" fill="#8884d8" />
-                </AreaChart>
+                <Chart
+                  options={chartOptions}
+                  series={[{ name: 'Total', data: seriesData }]}
+                  type="area"
+                  height={400}
+                />
               )}
               {chartType === 'pie' && (
-                <PieChart>
-                  <Pie
-                    data={filteredData}
-                    dataKey="total"
-                    nameKey="period"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={120}
-                    fill="#8884d8"
-                    label
-                  >
-                    {filteredData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
+                <Chart
+                  options={{
+                    labels: categories,
+                    colors: COLORS,
+                  }}
+                  series={seriesData}
+                  type="pie"
+                  height={400}
+                />
               )}
-            </ResponsiveContainer>
+            </div>
           </Paper>
         </Grid>
       </Grid>
