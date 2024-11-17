@@ -1,47 +1,63 @@
 import React, { useState } from "react";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TablePagination,
+  TableSortLabel,
 } from "@mui/material";
 
-function InvoiceTable({ headers, data }) {
-  const [page, setPage] = useState(0); // Pagination page state
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Number of rows per page
+function InvoiceTable({ headers, data, onSort, sortField, sortDirection }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // Handle page change
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  // Handle rows per page change
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to first page
+    setPage(0);
   };
 
-  // Slice data to show only the rows for the current page
-  const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedData = (data || []).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  // Function to get background color based on status
   const getStatusColor = (status) => {
     switch (status) {
       case "Paid":
-        return "#bef264"; // Green for Paid
+        return "#bef264";
       case "Pending":
-        return "#fdba74"; // Orange for Pending
+        return "#fdba74";
       case "Unpaid":
-        return "#fca5a5"; // Red for Unpaid
+        return "#fca5a5";
       default:
-        return "transparent"; // Default (no color)
+        return "transparent";
     }
   };
 
   return (
     <TableContainer component={Paper}>
-      <Table style={{ textAlign: 'center' }}>
+      <Table>
         <TableHead>
           <TableRow>
             {headers.map((header, index) => (
-              <TableCell key={index} style={{ textAlign: 'center' }}>{header}</TableCell>
+              <TableCell key={index} style={{ textAlign: "center" }}>
+                {["Date", "Due Date"].includes(header) ? (
+                  <TableSortLabel
+                    active={sortField === header.toLowerCase().replace(/\s/g, "")}
+                    direction={sortField === header.toLowerCase().replace(/\s/g, "") ? sortDirection : "asc"}
+                    onClick={() => onSort(header.toLowerCase().replace(/\s/g, ""))}
+                  >
+                    {header}
+                  </TableSortLabel>
+                ) : (
+                  header
+                )}
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -50,19 +66,17 @@ function InvoiceTable({ headers, data }) {
             <TableRow key={index}>
               {headers.map((header, idx) => {
                 const value = row[header.toLowerCase().replace(/\s/g, "")];
-
-                // If the current column is "Status", apply background color only to the value
                 if (header === "Status") {
                   return (
-                    <TableCell key={idx} style={{ textAlign: 'center' }}>
+                    <TableCell key={idx} style={{ textAlign: "center" }}>
                       <span
                         style={{
-                          backgroundColor: getStatusColor(value), // Apply the color
-                          color: "#000", // Set text color to white for contrast
-                          padding: '4px 8px', // Add some padding for better appearance
-                          borderRadius: '4px', // Optional: rounded corners
-                          display: 'block', // Ensure the span fits its content
-                          textAlign: 'center', // Center the text horizontally
+                          backgroundColor: getStatusColor(value),
+                          color: "#000",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          display: "block",
+                          textAlign: "center",
                         }}
                       >
                         {value}
@@ -70,23 +84,21 @@ function InvoiceTable({ headers, data }) {
                     </TableCell>
                   );
                 }
-
-                return <TableCell key={idx} style={{ textAlign: 'center' }}>{value}</TableCell>;
+                return <TableCell key={idx} style={{ textAlign: "center" }}>{value}</TableCell>;
               })}
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      {/* Pagination Component */}
       <TablePagination
         component="div"
-        count={data.length} // Total number of rows
-        page={page} // Current page
-        onPageChange={handleChangePage} // Function to handle page change
-        rowsPerPage={rowsPerPage} // Rows per page
-        onRowsPerPageChange={handleChangeRowsPerPage} // Function to handle rows per page change
-        rowsPerPageOptions={[5, 10, 25]} // Options for rows per page
+        count={data.length}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={[5, 10, 25]}
       />
     </TableContainer>
   );

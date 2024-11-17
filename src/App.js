@@ -2,7 +2,7 @@
 import React from 'react';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './components/theme';
-import DashboardLayout from './components/DashboardLayout';
+import DashboardLayout from './Dashboard/DashboardLayout';
 import { Routes, Route } from "react-router-dom";
 import Login from './components/Login';
 

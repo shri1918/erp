@@ -11,7 +11,7 @@ const InfoCard = ({ title, subtitle, amount, amountColor, backgroundColor, borde
   };
 
   return (
-    <Card onClick={handleNavigate} style={{ cursor: 'pointer' }}>
+    <Card onClick={handleNavigate} style={{ cursor: 'pointer',padding:15,borderRadius:15,width:300 }}>
       <CardContent>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h6">{title}</Typography>

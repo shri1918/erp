@@ -19,7 +19,7 @@ export const invoiceData = [
       total: "$200.00",
       paid: "$200.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
      
     },
     {
@@ -52,7 +52,7 @@ export const invoiceData = [
       total: "$400.00",
       paid: "$400.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
      
     },
     {
@@ -85,7 +85,7 @@ export const invoiceData = [
       total: "$600.00",
       paid: "$600.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
      
     },
     {
@@ -122,7 +122,7 @@ export const invoiceData = [
       total: "$120.00",
       paid: "$0.00",
       status: "Pending",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Sales Team",
     },
     {
@@ -144,7 +144,7 @@ export const invoiceData = [
       total: "$150.00",
       paid: "$150.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Finance Team",
     },
     {
@@ -177,7 +177,7 @@ export const invoiceData = [
       total: "$250.00",
       paid: "$0.00",
       status: "Pending",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Sales Team",
     },
     {
@@ -210,7 +210,7 @@ export const invoiceData = [
       total: "$60.00",
       paid: "$60.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Sales Team",
     },
     {
@@ -243,7 +243,7 @@ export const invoiceData = [
       total: "$300.00",
       paid: "$300.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Finance Team",
     },
     {
@@ -276,7 +276,7 @@ export const invoiceData = [
       total: "$170.00",
       paid: "$170.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Sales Team",
     },
     {
@@ -309,7 +309,7 @@ export const invoiceData = [
       total: "$220.00",
       paid: "$220.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Finance Team",
     },
     {
@@ -342,7 +342,7 @@ export const invoiceData = [
       total: "$200.00",
       paid: "$100.00",
       status: "Pending",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Sales Team",
     },
     {
@@ -375,7 +375,7 @@ export const invoiceData = [
       total: "$75.00",
       paid: "$75.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Finance Team",
     },
     {
@@ -408,7 +408,7 @@ export const invoiceData = [
       total: "$150.00",
       paid: "$0.00",
       status: "Pending",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Sales Team",
     },
     {
@@ -441,7 +441,7 @@ export const invoiceData = [
       total: "$90.00",
       paid: "$90.00",
       status: "Paid",
-      payment: "Credit Card",
+      payment: "Cash",
       createdby: "Finance Team",
     },
   ];
